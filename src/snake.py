@@ -27,7 +27,6 @@ width = 1000
 wn.setworldcoordinates(0, 0, width, height)
 wn.tracer(0)
 
-
 # loading images
 UP = join(STATIC_DIR, "up.gif")
 DOWN = join(STATIC_DIR, "down.gif")
@@ -35,7 +34,6 @@ RIGHT = join(STATIC_DIR, "right.gif")
 LEFT = join(STATIC_DIR, "left.gif")
 TAIL = join(STATIC_DIR, "tail.gif")
 APPLE = join(STATIC_DIR, "apple.gif")
-
 
 for s in [UP, DOWN, RIGHT, LEFT, TAIL, APPLE]:
     wn.register_shape(s)
@@ -143,10 +141,6 @@ def update_tail():
             x = snake[i - 1].xcor()
             y = snake[i - 1].ycor()
             snake[i].goto(x, y)
-
-        # # First segment goes to the previous head position
-        # if len(segments) > 0:
-        #     segments[0].goto(head.xcor(), head.ycor())
 
 
 def body_collision():
