@@ -4,11 +4,13 @@ import time
 import turtle
 from datetime import datetime
 from typing import List
+from os.path import join
 
 SPEED = 25
 DELAY = 0.025
 SEGMENT_SIZE = 25
-SCORES_PATH = "scores.pkl"
+STATIC_DIR = "static"
+SCORES_PATH = join(STATIC_DIR, "static/scores.pkl")
 scores = pickle.load(open(SCORES_PATH, 'rb'))
 try:
     HIGH_SCORE = max(scores)[0]
@@ -25,12 +27,12 @@ wn.setworldcoordinates(0, 0, width, height)
 wn.tracer(0)
 
 # loading images
-wn.register_shape("up.gif")
-wn.register_shape("right.gif")
-wn.register_shape("down.gif")
-wn.register_shape("left.gif")
-wn.register_shape("tail.gif")
-wn.register_shape("apple.gif")
+wn.register_shape(join(STATIC_DIR, "up.gif"))
+wn.register_shape(join(STATIC_DIR, "right.gif"))
+wn.register_shape(join(STATIC_DIR, "down.gif"))
+wn.register_shape(join(STATIC_DIR, "left.gif"))
+wn.register_shape(join(STATIC_DIR, "tail.gif"))
+wn.register_shape(join(STATIC_DIR, "apple.gif"))
 
 
 class SnakeHead(turtle.Turtle):
