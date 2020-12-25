@@ -3,14 +3,15 @@ import random
 import time
 import turtle
 from datetime import datetime
-from typing import List
+from functools import partial
 from os.path import join
+from typing import List
 
 SPEED = 25
 DELAY = 0.025
 SEGMENT_SIZE = 25
 STATIC_DIR = "static"
-SCORES_PATH = join(STATIC_DIR, "static/scores.pkl")
+SCORES_PATH = join(STATIC_DIR, "scores.pkl")
 scores = pickle.load(open(SCORES_PATH, 'rb'))
 try:
     HIGH_SCORE = max(scores)[0]
@@ -26,13 +27,18 @@ width = 1000
 wn.setworldcoordinates(0, 0, width, height)
 wn.tracer(0)
 
+
 # loading images
-wn.register_shape(join(STATIC_DIR, "up.gif"))
-wn.register_shape(join(STATIC_DIR, "right.gif"))
-wn.register_shape(join(STATIC_DIR, "down.gif"))
-wn.register_shape(join(STATIC_DIR, "left.gif"))
-wn.register_shape(join(STATIC_DIR, "tail.gif"))
-wn.register_shape(join(STATIC_DIR, "apple.gif"))
+UP = join(STATIC_DIR, "up.gif")
+DOWN = join(STATIC_DIR, "down.gif")
+RIGHT = join(STATIC_DIR, "right.gif")
+LEFT = join(STATIC_DIR, "left.gif")
+TAIL = join(STATIC_DIR, "tail.gif")
+APPLE = join(STATIC_DIR, "apple.gif")
+
+
+for s in [UP, DOWN, RIGHT, LEFT, TAIL, APPLE]:
+    wn.register_shape(s)
 
 
 class SnakeHead(turtle.Turtle):
@@ -61,7 +67,7 @@ def init_game():
     # snake head
     head = turtle.Turtle()
     head.speed(0)
-    head.shape("right.gif")
+    head.shape(RIGHT)
     head.shapesize(SEGMENT_SIZE, SEGMENT_SIZE)
     head.color("green")
     head.penup()
@@ -72,18 +78,17 @@ def init_game():
     # food
     apple = turtle.Turtle()
     apple.speed(0)
-    apple.shape("apple.gif")
+    apple.shape(APPLE)
     apple.penup()
 
     generate_apple()
 
     # controls
     wn.listen()
-    wn.onkeypress(go_up, "Up")
-    wn.onkeypress(go_left, "Left")
-    wn.onkeypress(go_down, "Down")
-    wn.onkeypress(go_right, "Right")
-    wn.onkeypress(pause, "space")
+    wn.onkeypress(partial(goto, direction="up", invalid="down"), "Up")
+    wn.onkeypress(partial(goto, direction="down", invalid="up"), "Down")
+    wn.onkeypress(partial(goto, direction="left", invalid="right"), "Left")
+    wn.onkeypress(partial(goto, direction="right", invalid="left"), "Right")
 
 
 def reset():
@@ -110,23 +115,7 @@ def generate_apple():
 def goto(direction, invalid):
     if head.direction != invalid:
         head.direction = direction
-        head.shape(f"{direction}.gif")
-
-
-def go_up():
-    goto("up", "down")
-
-
-def go_down():
-    goto("down", "up")
-
-
-def go_right():
-    goto("right", "left")
-
-
-def go_left():
-    goto("left", "right")
+        head.shape(join(STATIC_DIR, f"{direction}.gif"))
 
 
 def pause():
@@ -136,7 +125,7 @@ def pause():
 def generate_segment():
     segment = turtle.Turtle()
     segment.speed(0)
-    segment.shape("tail.gif")
+    segment.shape(TAIL)
     segment.penup()
     segment.shapesize(SEGMENT_SIZE, SEGMENT_SIZE)
     return segment
